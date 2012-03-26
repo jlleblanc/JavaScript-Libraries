@@ -1,0 +1,41 @@
+# PROOF OF CONCEPT: A JavaScript Library Manager for Joomla
+
+This plugin is a proof of concept of how Joomla could manage JavaScript libraries, as well as dependent scripts. The idea is to ensure that one and only one copy of any specific library is loaded on the page. This is one way we could potentially solve the problem.
+
+## jQuery
+
+This library will automatically send jQuery into `noConflict()` mode immediately after loading it. If a copy of jQuery is already present in the document head, it will not load another copy.
+
+## What it doesn't do
+
+It does not remove duplicate instances of libraries that have been added into the document head manually, nor does it remove scripts that have been hard coded into the template. It only manages the JavaScript libraries that have been registered within it.
+
+## CDN
+
+This plugin has support for the Google and Microsoft JavaScript CDNs. To activate, select the CDN you wish to use from the parameters in the plugin. If you wish to use a different CDN for a specific library, this is possible using the "overrides" parameter. Specify the name of the library, followed by a comma, followed by the URL to the library.
+
+## Usage
+
+When writing a Joomla extension and wanting to include a JavaScript library, first make sure to test whether the `JavascriptLibraries` class is present (it is loaded when the plugin is published). If not, you can include an `else` statement to include the JavaScript file the conventional way.
+
+	if (class_exists('JavascriptLibraries')) {
+		JavascriptLibraries::register_library('jquery', '1.4.2', 'media/jquery-1.4.2.min.js');
+	} else {
+		$doc = JFactory::getDocument();
+		$document->addScript(JURI::base() . 'media/jquery-1.4.2.min.js');
+	}
+
+Be sure to bundle a copy of the JavaScript library with your extension, otherwise an exception will be thrown. When you load a JavaScript library, you specify the name of the library (in lowercase) and specify the minimum version you wish to use. If other extensions register a higher version, that will be used instead.
+
+You can also register a specific script, specifying which library the script relies on:
+
+	if (class_exists('JavascriptLibraries')) {
+		JavascriptLibraries::register_library('jquery', '1.4.2', 'media/jquery-1.4.2.min.js');
+		JavascriptLibraries::register_script('path/to/my/jquery/script.js', 'jquery');
+	}
+
+The `JavascriptLibraries` class will make sure that dependent scripts are loaded after the specified library.
+
+## Design Considerations
+
+This plugin has only been tested on the Square One distribution of Joomla 2.5, but is intended to work all the way back to Joomla 1.5. Because of this, the `JavascriptLibraries` class is included in the same file as the plugin for maximum compatibility.

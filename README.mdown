@@ -19,12 +19,16 @@ This plugin has support for the Google and Microsoft JavaScript CDNs. To activat
 Once you have the plugin enabled, you can simply register a library this way:
 
 ```php
+<?php
+
 JavascriptLibraries::register_library('jquery', '1.4.2', 'media/jquery-1.4.2.min.js');
 ```
 
 Rouven Weßling has a [proposed integration](https://github.com/realityking/joomla-platform/compare/loader) for the Joomla Platform's `JDocument` class. If this proposal is accepted, you can make your code forward compatible with his work by first checking `JDocument` for the `registerLibrary()` method:
 
 ```php
+<?php
+
 $document = JFactory::getDocument();
 
 if (method_exists($document, 'registerLibrary')) {
@@ -39,6 +43,8 @@ Be sure to bundle a copy of the JavaScript library with your extension, otherwis
 You can also register a specific script, specifying which library the script relies on:
 
 ```php
+<?php
+
 JavascriptLibraries::register_library('jquery', '1.4.2', 'media/jquery-1.4.2.min.js');
 JavascriptLibraries::register_script('path/to/my/jquery/based/script.js', 'jquery');
 ```
@@ -46,6 +52,8 @@ JavascriptLibraries::register_script('path/to/my/jquery/based/script.js', 'jquer
 The `JavascriptLibraries` class will make sure that dependent scripts are loaded after the specified library. Rouven's proposed `JDocument` integration does not currently register scripts with specific libraries, so simply call the existing `addScript()` method in forward-compatible code:
 
 ```php
+<?php
+
 $document = JFactory::getDocument();
 
 if (method_exists($document, 'registerLibrary')) {

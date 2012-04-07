@@ -18,10 +18,13 @@ This plugin has support for the Google and Microsoft JavaScript CDNs. To activat
 
 Once you have the plugin enabled, you can simply register a library this way:
 
+```php
 	JavascriptLibraries::register_library('jquery', '1.4.2', 'media/jquery-1.4.2.min.js');
+```
 
 Rouven Weßling has a [proposed integration](https://github.com/realityking/joomla-platform/compare/loader) for the Joomla Platform's `JDocument` class. If this proposal is accepted, you can make your code forward compatible with his work by first checking `JDocument` for the `registerLibrary()` method:
 
+```php
 	$document = JFactory::getDocument();
 
 	if (method_exists($document, 'registerLibrary')) {
@@ -29,16 +32,20 @@ Rouven Weßling has a [proposed integration](https://github.com/realityking/joom
 	} else {
 		JavascriptLibraries::register_library('jquery', '1.4.2', 'media/jquery-1.4.2.min.js');
 	}
+```
 
 Be sure to bundle a copy of the JavaScript library with your extension, otherwise an exception will be thrown. When you load a JavaScript library, you specify the name of the library (in lowercase) and specify the minimum version you wish to use. If other extensions register a higher version, that will be used instead.
 
 You can also register a specific script, specifying which library the script relies on:
 
+```php
 	JavascriptLibraries::register_library('jquery', '1.4.2', 'media/jquery-1.4.2.min.js');
 	JavascriptLibraries::register_script('path/to/my/jquery/based/script.js', 'jquery');
+```
 
 The `JavascriptLibraries` class will make sure that dependent scripts are loaded after the specified library. Rouven's proposed `JDocument` integration does not currently register scripts with specific libraries, so simply call the existing `addScript()` method in forward-compatible code:
 
+```php
 	$document = JFactory::getDocument();
 
 	if (method_exists($document, 'registerLibrary')) {
@@ -48,7 +55,7 @@ The `JavascriptLibraries` class will make sure that dependent scripts are loaded
 		JavascriptLibraries::register_library('jquery', '1.4.2', 'media/jquery-1.4.2.min.js');
 		JavascriptLibraries::register_script('path/to/my/jquery/based/script.js', 'jquery');
 	}
-
+```
 
 ## Design Considerations
 
